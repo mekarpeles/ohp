@@ -15,7 +15,8 @@ import csv
 import random
 import string
 from operator import add
-from math import sqrt
+from itertools import product
+import numpy, scipy
 
 def csv_parse(csvf):
     """Reads a csv file into memory and parses its contents into a
@@ -135,11 +136,38 @@ def mergesort(lst):
     left, right = mergesort(lst[:midpoint]), mergesort(lst[midpoint:])
     return merge(left, right)
 
-def lsfit(x, y):
-    """Assuming for some reason python's scipy.stats.linregress(x, y)
-    and scipy.optimize.leastsq are inadequate.
+def lsrl():
+    """Resources:
+    http://www.itl.nist.gov/div898/handbook/pmd/section1/pmd141.htm
+    http://math.hws.edu/javamath/ryan/Regression.html
     """
-    pass
+    def residual_sums():
+        pass
+
+    def slr(xs, ys, xys):
+        """Simple linear regression, solving for y = a + b * x"""        
+        samples = len(data['values'])   
+
+        sum_x = sum(xs)
+        sum_y = sum(ys)
+        sum_yx = sum(float(x) * float(y) for x, y in xys)
+        sum_x2 = sum(float(x) * float(x) for x in xs)
+        sum_y2 = sum(float(y) * float(y) for y in ys)
+        mean_x = sum_x / samples
+        mean_y = sum_y / samples
+        slope = (sum_yx - ((sum_x * sum_y)/samples)) / (sum_x2 - ((sum_x * sum_x) / samples))
+        y_intercept = mean_y - (slope * mean_x)
+
+        # correlation coefficient 
+        r = sum_yx / sqrt(sum_x2 * sum_y2)
+        return "slope: {}, y-intercept: {}, r: {}".format(slope, y_intercept, r)
+    
+    data = csv_parse('data/xy.csv')
+    xys = data['values']
+    xs = [float(x) for x, y in xys]
+    ys = [float(y) for x, y in xys]              
+    return slr(xs, ys, xys)
 
 if __name__ == "__main__":    
     print outer_join(on='position')
+    print lsrl()
