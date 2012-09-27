@@ -136,18 +136,14 @@ def mergesort(lst):
     left, right = mergesort(lst[:midpoint]), mergesort(lst[midpoint:])
     return merge(left, right)
 
-def lsrl():
-    """Resources:
-    http://www.itl.nist.gov/div898/handbook/pmd/section1/pmd141.htm
-    http://math.hws.edu/javamath/ryan/Regression.html
-    """
+def lslr(dataset='data/xy.csv'):
+    """Shell for least squares regression"""
     def residual_sums():
         pass
 
     def slr(xs, ys, xys):
-        """Simple linear regression, solving for y = a + b * x"""        
-        samples = len(data['values'])   
-
+        """Simple linear regression"""
+        samples = len(data['values'])
         sum_x = sum(xs)
         sum_y = sum(ys)
         sum_yx = sum(float(x) * float(y) for x, y in xys)
@@ -162,12 +158,13 @@ def lsrl():
         r = sum_yx / sqrt(sum_x2 * sum_y2)
         return "slope: {}, y-intercept: {}, r: {}".format(slope, y_intercept, r)
     
-    data = csv_parse('data/xy.csv')
+    data = csv_parse(dataset)
     xys = data['values']
     xs = [float(x) for x, y in xys]
     ys = [float(y) for x, y in xys]              
+    #falls back to simple linear regression
     return slr(xs, ys, xys)
 
 if __name__ == "__main__":    
     print outer_join(on='position')
-    print lsrl()
+    print lslr()
